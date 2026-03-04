@@ -1,67 +1,125 @@
-# clang-format studio
+# ◆ clang-format studio
 
-A beautiful, interactive configurator for `clang-format` — built for C++ style guide meetings and sharing configs with your team.
+An interactive configurator for `clang-format` with a live Monaco editor, diff view, and shareable URLs. Built for C++ style guide meetings.
+
+![UI: liquid glass dark theme with options sidebar and Monaco editor](https://raw.githubusercontent.com/thesammygit/clang-format-studio/main/docs/preview.png)
+
+---
 
 ## Features
 
-- **Live formatting** — edit code or options, see results instantly
-- **Preset styles** — LLVM, Google, Chromium, Mozilla, WebKit
-- **Diff view** — Monaco side-by-side diff of original vs formatted
-- **Export / Import** — download or upload `.clang-format` files
-- **Shareable URLs** — config encoded in `?c=` query param
-- **~80 options** — categorized, searchable, with Essential/All view toggle
-- **Keyboard shortcut** — `Cmd/Ctrl+S` to reformat
+- **Live formatting** — tweak any option and the code reformats instantly (300ms debounce)
+- **Preset styles** — LLVM, Google, Chromium, Mozilla, WebKit — one click to load
+- **Diff view** — Monaco side-by-side diff of original vs formatted output
+- **Essential / All toggle** — shows the 20 most-tweaked options by default, or all ~90
+- **Export** — downloads a ready-to-use `.clang-format` file
+- **Load config** — drag in any existing `.clang-format` to populate the UI
+- **Shareable URLs** — full config is base64-encoded in the `?c=` query param
+- **Keyboard shortcut** — `Cmd/Ctrl+S` to force reformat
+
+---
 
 ## Requirements
 
-- **Node.js 18+**
-- **clang-format** installed and in PATH
+| Requirement | Version |
+|---|---|
+| Node.js | 18 or newer |
+| clang-format | any version in PATH |
+
+### Install clang-format
 
 ```bash
 # macOS
 brew install clang-format
 
-# Ubuntu/Debian
+# Ubuntu / Debian
 sudo apt install clang-format
 
-# Windows — install LLVM from https://releases.llvm.org/
+# Arch
+sudo pacman -S clang
+
+# Windows — download the LLVM installer from https://releases.llvm.org/
+# Make sure to tick "Add to PATH" during install
 ```
 
-## Getting started
+---
+
+## Quick start
 
 ```bash
-git clone https://github.com/your-username/clang-format-studio
+git clone https://github.com/thesammygit/clang-format-studio
 cd clang-format-studio
-npm install
-cd frontend && npm install && cd ..
-npm run dev
+./start.sh
 ```
 
+The script will:
+1. Verify Node.js 18+ and clang-format are available
+2. Run `npm install` in both root and `frontend/` if needed
+3. Start the Express backend on **:3000** and Vite on **:5173**
+
 Then open **http://localhost:5173**
+
+---
+
+## Manual start
+
+If you prefer running things separately:
+
+```bash
+# Install dependencies (first time only)
+npm install
+cd frontend && npm install && cd ..
+
+# Start both servers together
+npm run dev
+
+# Or individually
+npm run dev:server    # Express backend on :3000
+npm run dev:frontend  # Vite dev server on :5173
+```
+
+---
 
 ## Project structure
 
 ```
-cppFormatViewer/
+clang-format-studio/
+├── start.sh                  ← one-command launcher
 ├── server/
-│   ├── index.ts          Express backend (~80 lines)
-│   └── options.json      clang-format option metadata
+│   ├── index.ts              Express backend — /version /options /defaults /format
+│   └── options.json          ~90 clang-format option definitions
 ├── frontend/
 │   └── src/
-│       ├── App.tsx        Layout, URL state, keyboard shortcuts
-│       ├── store.ts       Zustand state
-│       ├── api.ts         Fetch wrappers
+│       ├── App.tsx            Layout, URL state, Cmd+S shortcut, resize
+│       ├── store.ts           Zustand global state
+│       ├── api.ts             Typed fetch wrappers
 │       └── components/
-│           ├── TopBar.tsx
-│           ├── OptionsSidebar.tsx
-│           └── CodePanel.tsx
+│           ├── TopBar.tsx     Logo, presets, export/load, version badge
+│           ├── OptionsSidebar.tsx  Controls, search, category sections
+│           └── CodePanel.tsx  Monaco editor + diff view
 └── package.json
 ```
 
+---
+
+## API
+
+The backend exposes four endpoints (all proxied through Vite in dev):
+
+| Endpoint | Description |
+|---|---|
+| `GET /version` | Returns `{ version, available }` |
+| `GET /options` | Returns all option metadata from `options.json` |
+| `GET /defaults?style=LLVM` | Runs `clang-format --dump-config --style=X`, returns parsed JSON |
+| `POST /format` | Body: `{ code, config }` — returns `{ formatted }` or `{ error }` |
+
+---
+
 ## Tech stack
 
-**Backend:** Node.js · Express · TypeScript · js-yaml
-**Frontend:** Vite · React 18 · TypeScript · Tailwind CSS · Monaco Editor · Zustand · Sonner
+**Backend** — Node.js · Express · TypeScript (`tsx`) · `js-yaml`
+
+**Frontend** — Vite · React 18 · TypeScript · Tailwind CSS v3 · Monaco Editor · Zustand · Sonner
 
 ---
 

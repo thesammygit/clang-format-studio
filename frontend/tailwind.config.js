@@ -3,23 +3,23 @@ export default {
   content: ['./index.html', './src/**/*.{ts,tsx}'],
   theme: {
     extend: {
-      colors: {
-        studio: {
-          bg: '#0d1117',
-          surface: '#161b22',
-          border: '#30363d',
-          accent: '#388bfd',
-          accentDim: '#1f4066',
-          muted: '#8b949e',
-          text: '#e6edf3',
-          changed: '#f78166',
-        },
-      },
       fontFamily: {
+        ui: ['Figtree', 'system-ui', 'sans-serif'],
         mono: ['JetBrains Mono', 'Fira Code', 'ui-monospace', 'monospace'],
+      },
+      borderRadius: {
+        '2xl': '16px',
+        '3xl': '22px',
+      },
+      keyframes: {
+        'spin-slow': { to: { transform: 'rotate(360deg)' } },
+        'fade-in': { from: { opacity: '0', transform: 'translateY(4px)' }, to: { opacity: '1', transform: 'translateY(0)' } },
+      },
+      animation: {
+        'spin-slow': 'spin-slow 1.2s linear infinite',
+        'fade-in': 'fade-in 0.2s ease-out forwards',
       },
     },
   },
   plugins: [],
 }
-

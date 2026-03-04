@@ -1,5 +1,5 @@
-import React, { useRef } from 'react';
-import { Download, Upload, Braces } from 'lucide-react';
+import { useRef } from 'react';
+import { ArrowDownToLine, FolderOpen } from 'lucide-react';
 import * as yaml from 'js-yaml';
 import { toast } from 'sonner';
 import { useStore } from '../store';
@@ -20,9 +20,9 @@ export function TopBar({ onPresetLoad }: TopBarProps) {
       const defaults = await getDefaults(preset);
       setActivePreset(preset);
       onPresetLoad(defaults, preset);
-      toast.success(`Loaded ${preset} preset`);
+      toast.success(`${preset} preset loaded`);
     } catch {
-      toast.error(`Failed to load ${preset} preset`);
+      toast.error(`Failed to load ${preset}`);
     }
   }
 
@@ -35,7 +35,7 @@ export function TopBar({ onPresetLoad }: TopBarProps) {
     a.download = '.clang-format';
     a.click();
     URL.revokeObjectURL(url);
-    toast.success('Downloaded .clang-format');
+    toast.success('.clang-format exported');
   }
 
   function handleFileLoad(e: React.ChangeEvent<HTMLInputElement>) {
@@ -51,79 +51,159 @@ export function TopBar({ onPresetLoad }: TopBarProps) {
           toast.success(`Loaded ${file.name}`);
         }
       } catch {
-        toast.error('Failed to parse .clang-format file');
+        toast.error('Could not parse config file');
       }
     };
     reader.readAsText(file);
-    // reset so the same file can be re-loaded
     e.target.value = '';
   }
 
   return (
-    <div className="flex items-center gap-4 px-4 h-12 bg-studio-surface border-b border-studio-border shrink-0">
+    <div
+      className="glass mx-2 mt-2 rounded-2xl shrink-0 flex items-center px-5 h-12 gap-6"
+    >
       {/* Logo */}
-      <div className="flex items-center gap-2 mr-2">
-        <Braces size={18} className="text-studio-accent" />
-        <span className="text-studio-text font-semibold tracking-tight text-sm">
+      <div className="flex items-center gap-2.5 shrink-0">
+        <div
+          className="w-5 h-5 rounded-md flex items-center justify-center text-[10px] font-mono shrink-0"
+          style={{
+            background: 'rgba(170,205,255,0.12)',
+            border: '1px solid rgba(170,205,255,0.25)',
+            color: 'rgba(170,205,255,0.9)',
+            boxShadow: '0 0 10px rgba(170,205,255,0.12) inset',
+          }}
+        >
+          ◆
+        </div>
+        <span className="font-ui text-sm font-medium tracking-tight" style={{ color: 'rgba(255,255,255,0.7)' }}>
           clang-format{' '}
-          <span className="text-studio-accent" style={{ textShadow: '0 0 12px rgba(56,139,253,0.6)' }}>
-            studio
-          </span>
+          <span style={{ color: 'rgba(255,255,255,0.36)', fontWeight: 300 }}>studio</span>
         </span>
       </div>
 
-      {/* Preset buttons */}
-      <div className="flex items-center gap-1">
-        {PRESETS.map((p) => (
-          <button
-            key={p}
-            onClick={() => handlePreset(p)}
-            className={`px-2.5 py-1 text-xs rounded border transition-all ${
-              activePreset === p
-                ? 'bg-studio-accentDim border-studio-accent text-studio-accent'
-                : 'bg-transparent border-studio-border text-studio-muted hover:border-studio-accent hover:text-studio-text'
-            }`}
-          >
-            {p}
-          </button>
-        ))}
+      {/* Hairline divider */}
+      <div className="h-4 w-px shrink-0" style={{ background: 'rgba(255,255,255,0.08)' }} />
+
+      {/* Preset tabs */}
+      <div className="flex items-center gap-0.5">
+        {PRESETS.map((p) => {
+          const isActive = activePreset === p;
+          return (
+            <button
+              key={p}
+              onClick={() => handlePreset(p)}
+              style={{
+                fontFamily: 'var(--font-ui)',
+                fontSize: '12px',
+                fontWeight: isActive ? 500 : 400,
+                color: isActive ? 'rgba(170,205,255,0.9)' : 'rgba(255,255,255,0.32)',
+                background: isActive ? 'rgba(170,205,255,0.08)' : 'transparent',
+                border: '1px solid',
+                borderColor: isActive ? 'rgba(170,205,255,0.2)' : 'transparent',
+                borderRadius: '8px',
+                padding: '4px 10px',
+                cursor: 'pointer',
+                transition: 'all 0.18s ease',
+                letterSpacing: '0.01em',
+              }}
+              onMouseEnter={(e) => {
+                if (!isActive) {
+                  (e.currentTarget as HTMLButtonElement).style.color = 'rgba(255,255,255,0.58)';
+                }
+              }}
+              onMouseLeave={(e) => {
+                if (!isActive) {
+                  (e.currentTarget as HTMLButtonElement).style.color = 'rgba(255,255,255,0.32)';
+                }
+              }}
+            >
+              {p}
+            </button>
+          );
+        })}
       </div>
 
       <div className="flex-1" />
 
-      {/* Actions */}
-      <button
-        onClick={() => fileInputRef.current?.click()}
-        className="flex items-center gap-1.5 px-3 py-1 text-xs rounded border border-studio-border text-studio-muted hover:border-studio-accent hover:text-studio-text transition-all"
-      >
-        <Upload size={13} />
-        Load config
-      </button>
-      <input
-        ref={fileInputRef}
-        type="file"
-        accept=".clang-format,.yaml,.yml"
-        className="hidden"
-        onChange={handleFileLoad}
-      />
-
-      <button
-        onClick={handleExport}
-        className="flex items-center gap-1.5 px-3 py-1 text-xs rounded border border-studio-accent text-studio-accent hover:bg-studio-accentDim transition-all"
-      >
-        <Download size={13} />
-        Export .clang-format
-      </button>
-
-      {/* Version badge */}
+      {/* Version */}
       <div
-        className={`px-2 py-0.5 text-xs rounded-full border font-mono ${
-          versionAvailable
-            ? 'border-emerald-700 text-emerald-400 bg-emerald-950/50'
-            : 'border-red-800 text-red-400 bg-red-950/50'
-        }`}
+        className="font-mono text-[10px] tracking-wide shrink-0"
+        style={{
+          color: versionAvailable ? 'rgba(130,210,160,0.7)' : 'rgba(255,120,120,0.6)',
+          letterSpacing: '0.04em',
+        }}
       >
-        {versionAvailable ? `clang-format ${version}` : 'clang-format not found'}
+        {versionAvailable ? `v${version}` : 'not found'}
+      </div>
+
+      {/* Hairline divider */}
+      <div className="h-4 w-px shrink-0" style={{ background: 'rgba(255,255,255,0.08)' }} />
+
+      {/* Action buttons */}
+      <div className="flex items-center gap-2">
+        <button
+          onClick={() => fileInputRef.current?.click()}
+          className="flex items-center gap-1.5 transition-all"
+          style={{
+            fontFamily: 'var(--font-ui)',
+            fontSize: '11.5px',
+            fontWeight: 400,
+            color: 'rgba(255,255,255,0.38)',
+            background: 'transparent',
+            border: '1px solid rgba(255,255,255,0.08)',
+            borderRadius: '8px',
+            padding: '5px 10px',
+            cursor: 'pointer',
+            letterSpacing: '0.01em',
+          }}
+          onMouseEnter={(e) => {
+            (e.currentTarget as HTMLButtonElement).style.color = 'rgba(255,255,255,0.65)';
+            (e.currentTarget as HTMLButtonElement).style.borderColor = 'rgba(255,255,255,0.16)';
+          }}
+          onMouseLeave={(e) => {
+            (e.currentTarget as HTMLButtonElement).style.color = 'rgba(255,255,255,0.38)';
+            (e.currentTarget as HTMLButtonElement).style.borderColor = 'rgba(255,255,255,0.08)';
+          }}
+        >
+          <FolderOpen size={12} strokeWidth={1.5} />
+          Load
+        </button>
+        <input
+          ref={fileInputRef}
+          type="file"
+          accept=".clang-format,.yaml,.yml"
+          className="hidden"
+          onChange={handleFileLoad}
+        />
+
+        <button
+          onClick={handleExport}
+          className="flex items-center gap-1.5 transition-all"
+          style={{
+            fontFamily: 'var(--font-ui)',
+            fontSize: '11.5px',
+            fontWeight: 500,
+            color: 'rgba(170,205,255,0.8)',
+            background: 'rgba(170,205,255,0.07)',
+            border: '1px solid rgba(170,205,255,0.2)',
+            borderRadius: '8px',
+            padding: '5px 10px',
+            cursor: 'pointer',
+            letterSpacing: '0.01em',
+            boxShadow: '0 0 12px rgba(170,205,255,0.06) inset',
+          }}
+          onMouseEnter={(e) => {
+            (e.currentTarget as HTMLButtonElement).style.background = 'rgba(170,205,255,0.12)';
+            (e.currentTarget as HTMLButtonElement).style.borderColor = 'rgba(170,205,255,0.35)';
+          }}
+          onMouseLeave={(e) => {
+            (e.currentTarget as HTMLButtonElement).style.background = 'rgba(170,205,255,0.07)';
+            (e.currentTarget as HTMLButtonElement).style.borderColor = 'rgba(170,205,255,0.2)';
+          }}
+        >
+          <ArrowDownToLine size={12} strokeWidth={1.5} />
+          Export
+        </button>
       </div>
     </div>
   );
