@@ -1,0 +1,651 @@
+{
+  "BasedOnStyle": {
+    "type": "enum",
+    "values": ["LLVM", "Google", "Chromium", "Mozilla", "WebKit", "Microsoft", "GNU"],
+    "category": "Base Style",
+    "description": "The style used for all options not specifically set in the configuration.",
+    "default": "LLVM",
+    "essential": true
+  },
+  "ColumnLimit": {
+    "type": "int",
+    "category": "Line Length",
+    "description": "The column limit. A column limit of 0 means that there is no column limit. In this case, clang-format will respect the input's line breaking decisions within statements.",
+    "default": 80,
+    "min": 0,
+    "max": 200,
+    "essential": true
+  },
+  "IndentWidth": {
+    "type": "int",
+    "category": "Indentation",
+    "description": "The number of columns to use for indentation.",
+    "default": 2,
+    "min": 0,
+    "max": 8,
+    "essential": true
+  },
+  "TabWidth": {
+    "type": "int",
+    "category": "Indentation",
+    "description": "The number of columns used for tab stops.",
+    "default": 8,
+    "min": 1,
+    "max": 16,
+    "essential": true
+  },
+  "UseTab": {
+    "type": "enum",
+    "values": ["Never", "ForIndentation", "ForContinuationAndIndentation", "AlignWithSpaces", "Always"],
+    "category": "Indentation",
+    "description": "The way to use tab characters in the resulting file.",
+    "default": "Never",
+    "essential": true
+  },
+  "ContinuationIndentWidth": {
+    "type": "int",
+    "category": "Indentation",
+    "description": "Indent width for line continuations.",
+    "default": 4,
+    "min": 0,
+    "max": 16,
+    "essential": true
+  },
+  "NamespaceIndentation": {
+    "type": "enum",
+    "values": ["None", "Inner", "All"],
+    "category": "Indentation",
+    "description": "The indentation used for namespaces.",
+    "default": "None",
+    "essential": true
+  },
+  "IndentCaseLabels": {
+    "type": "bool",
+    "category": "Indentation",
+    "description": "Indent case labels one level from the switch statement.",
+    "default": false
+  },
+  "IndentCaseBlocks": {
+    "type": "bool",
+    "category": "Indentation",
+    "description": "Indent case blocks one level from the case label.",
+    "default": false
+  },
+  "IndentPPDirectives": {
+    "type": "enum",
+    "values": ["None", "AfterHash", "BeforeHash"],
+    "category": "Indentation",
+    "description": "The preprocessor directive indenting style to use.",
+    "default": "None"
+  },
+  "IndentRequiresClause": {
+    "type": "bool",
+    "category": "Indentation",
+    "description": "Indent the requires clause in a template.",
+    "default": true
+  },
+  "LambdaBodyIndentation": {
+    "type": "enum",
+    "values": ["Signature", "OuterScope"],
+    "category": "Indentation",
+    "description": "The indentation style of lambda bodies.",
+    "default": "Signature"
+  },
+  "BreakBeforeBraces": {
+    "type": "enum",
+    "values": ["Attach", "Linux", "Mozilla", "Stroustrup", "Allman", "Whitesmiths", "GNU", "WebKit", "Custom"],
+    "category": "Braces",
+    "description": "The brace breaking style to use.",
+    "default": "Attach",
+    "essential": true
+  },
+  "BraceWrapping": {
+    "type": "BraceWrappingFlags",
+    "category": "Braces",
+    "description": "Control of individual brace wrapping cases. Only active when BreakBeforeBraces is Custom.",
+    "dependsOn": { "BreakBeforeBraces": "Custom" },
+    "flags": {
+      "AfterCaseLabel": { "default": false, "description": "Wrap braces after a case label." },
+      "AfterClass": { "default": false, "description": "Wrap braces after a class definition." },
+      "AfterControlStatement": { "default": "Never", "description": "Wrap braces after a control statement (if/else/for/while/switch).", "type": "enum", "values": ["Never", "MultiLine", "Always"] },
+      "AfterEnum": { "default": false, "description": "Wrap braces after an enum definition." },
+      "AfterFunction": { "default": false, "description": "Wrap braces after a function definition." },
+      "AfterNamespace": { "default": false, "description": "Wrap braces after a namespace definition." },
+      "AfterStruct": { "default": false, "description": "Wrap braces after a struct definition." },
+      "AfterUnion": { "default": false, "description": "Wrap braces after a union definition." },
+      "AfterExternBlock": { "default": false, "description": "Wrap braces after an extern block." },
+      "BeforeCatch": { "default": false, "description": "Wrap braces before a catch." },
+      "BeforeElse": { "default": false, "description": "Wrap braces before an else." },
+      "BeforeLambdaBody": { "default": false, "description": "Wrap braces before a lambda body." },
+      "BeforeWhile": { "default": false, "description": "Wrap braces before a while." },
+      "IndentBraces": { "default": false, "description": "Indent the wrapped braces themselves." },
+      "SplitEmptyFunction": { "default": true, "description": "If false, empty function body can be put on a single line." },
+      "SplitEmptyRecord": { "default": true, "description": "If false, empty record (e.g., class, struct or union) body can be put on a single line." },
+      "SplitEmptyNamespace": { "default": true, "description": "If false, empty namespace body can be put on a single line." }
+    }
+  },
+  "AllowShortFunctionsOnASingleLine": {
+    "type": "enum",
+    "values": ["None", "InlineOnly", "Empty", "Inline", "All"],
+    "category": "Short Constructs",
+    "description": "Dependent on the value, int f() { return 0; } can be put on a single line.",
+    "default": "All",
+    "essential": true
+  },
+  "AllowShortIfStatementsOnASingleLine": {
+    "type": "enum",
+    "values": ["Never", "WithoutElse", "OnlyFirstIf", "AllIfsAndElse"],
+    "category": "Short Constructs",
+    "description": "If true, if (a) return; can be put on a single line.",
+    "default": "Never",
+    "essential": true
+  },
+  "AllowShortLoopsOnASingleLine": {
+    "type": "bool",
+    "category": "Short Constructs",
+    "description": "If true, while (true) continue; can be put on a single line.",
+    "default": false
+  },
+  "AllowShortBlocksOnASingleLine": {
+    "type": "enum",
+    "values": ["Never", "Empty", "Always"],
+    "category": "Short Constructs",
+    "description": "Dependent on the value, while (true) { continue; } can be put on a single line.",
+    "default": "Never"
+  },
+  "AllowShortLambdasOnASingleLine": {
+    "type": "enum",
+    "values": ["None", "Empty", "Inline", "All"],
+    "category": "Short Constructs",
+    "description": "Dependent on the value, auto lambda = []() { return 0; }; can be put on a single line.",
+    "default": "All"
+  },
+  "AllowShortCaseLabelsOnASingleLine": {
+    "type": "bool",
+    "category": "Short Constructs",
+    "description": "If true, short case labels will be contracted to a single line.",
+    "default": false
+  },
+  "PointerAlignment": {
+    "type": "enum",
+    "values": ["Left", "Right", "Middle"],
+    "category": "Pointers & References",
+    "description": "Pointer and reference alignment style.",
+    "default": "Right",
+    "essential": true
+  },
+  "ReferenceAlignment": {
+    "type": "enum",
+    "values": ["Pointer", "Left", "Right", "Middle"],
+    "category": "Pointers & References",
+    "description": "Reference alignment style (overrides PointerAlignment for references).",
+    "default": "Pointer"
+  },
+  "DerivePointerAlignment": {
+    "type": "bool",
+    "category": "Pointers & References",
+    "description": "If true, analyze the formatted file for the most common alignment of & and *. Pointer and reference alignment styles are then used only as fallback.",
+    "default": false
+  },
+  "SpaceBeforeParens": {
+    "type": "enum",
+    "values": ["Never", "ControlStatements", "ControlStatementsExceptControlMacros", "NonEmptyParentheses", "Always", "Custom"],
+    "category": "Spaces",
+    "description": "Defines in which cases to put a space before opening parentheses.",
+    "default": "ControlStatements",
+    "essential": true
+  },
+  "SpaceAfterCStyleCast": {
+    "type": "bool",
+    "category": "Spaces",
+    "description": "If true, a space is inserted after C style casts.",
+    "default": false
+  },
+  "SpaceAfterLogicalNot": {
+    "type": "bool",
+    "category": "Spaces",
+    "description": "If true, a space is inserted after the logical not operator (!).",
+    "default": false
+  },
+  "SpaceAfterTemplateKeyword": {
+    "type": "bool",
+    "category": "Spaces",
+    "description": "If true, a space will be inserted after the 'template' keyword.",
+    "default": true
+  },
+  "SpaceAroundPointerQualifiers": {
+    "type": "enum",
+    "values": ["Default", "Before", "After", "Both"],
+    "category": "Spaces",
+    "description": "Defines in which cases to put a space before or after pointer qualifiers.",
+    "default": "Default"
+  },
+  "SpaceBeforeAssignmentOperators": {
+    "type": "bool",
+    "category": "Spaces",
+    "description": "If false, spaces will be removed before assignment operators.",
+    "default": true
+  },
+  "SpaceBeforeCaseColon": {
+    "type": "bool",
+    "category": "Spaces",
+    "description": "If false, spaces will be removed before case colon.",
+    "default": false
+  },
+  "SpaceBeforeCpp11BracedList": {
+    "type": "bool",
+    "category": "Spaces",
+    "description": "If true, a space will be inserted before a C++11 braced list used to initialize an object.",
+    "default": false
+  },
+  "SpaceBeforeCtorInitializerColon": {
+    "type": "bool",
+    "category": "Spaces",
+    "description": "If false, spaces will be removed before constructor initializer colon.",
+    "default": true
+  },
+  "SpaceBeforeInheritanceColon": {
+    "type": "bool",
+    "category": "Spaces",
+    "description": "If false, spaces will be removed before inheritance colon.",
+    "default": true
+  },
+  "SpaceBeforeRangeBasedForLoopColon": {
+    "type": "bool",
+    "category": "Spaces",
+    "description": "If false, spaces will be removed before range-based for loop colon.",
+    "default": true
+  },
+  "SpaceBeforeSquareBrackets": {
+    "type": "bool",
+    "category": "Spaces",
+    "description": "If true, spaces will be before [. Lambdas will not be affected.",
+    "default": false
+  },
+  "SpaceInEmptyBlock": {
+    "type": "bool",
+    "category": "Spaces",
+    "description": "If true, spaces will be inserted into {}.",
+    "default": false
+  },
+  "SpaceInEmptyParentheses": {
+    "type": "bool",
+    "category": "Spaces",
+    "description": "If true, spaces may be inserted into ().",
+    "default": false
+  },
+  "SpacesBeforeTrailingComments": {
+    "type": "int",
+    "category": "Spaces",
+    "description": "The number of spaces before trailing line comments (// - comments).",
+    "default": 1,
+    "min": 0,
+    "max": 8
+  },
+  "SpacesInAngles": {
+    "type": "enum",
+    "values": ["Never", "Always", "Leave"],
+    "category": "Spaces",
+    "description": "The SpacesInAngles style.",
+    "default": "Never",
+    "essential": true
+  },
+  "SpacesInCStyleCastParentheses": {
+    "type": "bool",
+    "category": "Spaces",
+    "description": "If true, spaces will be inserted in C style casts.",
+    "default": false
+  },
+  "SpacesInConditionalStatement": {
+    "type": "bool",
+    "category": "Spaces",
+    "description": "If true, spaces will be inserted around if/for/switch/while conditions.",
+    "default": false
+  },
+  "SpacesInContainerLiterals": {
+    "type": "bool",
+    "category": "Spaces",
+    "description": "If true, spaces are inserted inside container literals (e.g., ObjC and Javascript array and dict literals).",
+    "default": true
+  },
+  "SpacesInParentheses": {
+    "type": "bool",
+    "category": "Spaces",
+    "description": "If true, spaces will be inserted after ( and before ).",
+    "default": false
+  },
+  "SpacesInSquareBrackets": {
+    "type": "bool",
+    "category": "Spaces",
+    "description": "If true, spaces will be inserted after [ and before ]. Lambdas or unspecified size array declarations will not be affected.",
+    "default": false
+  },
+  "AlignConsecutiveAssignments": {
+    "type": "enum",
+    "values": ["None", "Consecutive", "AcrossEmptyLines", "AcrossComments", "AcrossEmptyLinesAndComments"],
+    "category": "Alignment",
+    "description": "Style of aligning consecutive assignments. Aligns the assignment operators of consecutive lines.",
+    "default": "None",
+    "essential": true
+  },
+  "AlignConsecutiveBitFields": {
+    "type": "enum",
+    "values": ["None", "Consecutive", "AcrossEmptyLines", "AcrossComments", "AcrossEmptyLinesAndComments"],
+    "category": "Alignment",
+    "description": "Style of aligning consecutive bit fields.",
+    "default": "None"
+  },
+  "AlignConsecutiveDeclarations": {
+    "type": "enum",
+    "values": ["None", "Consecutive", "AcrossEmptyLines", "AcrossComments", "AcrossEmptyLinesAndComments"],
+    "category": "Alignment",
+    "description": "Style of aligning consecutive declarations.",
+    "default": "None"
+  },
+  "AlignConsecutiveMacros": {
+    "type": "enum",
+    "values": ["None", "Consecutive", "AcrossEmptyLines", "AcrossComments", "AcrossEmptyLinesAndComments"],
+    "category": "Alignment",
+    "description": "Style of aligning consecutive macro definitions.",
+    "default": "None"
+  },
+  "AlignAfterOpenBracket": {
+    "type": "enum",
+    "values": ["Align", "DontAlign", "AlwaysBreak", "BlockIndent"],
+    "category": "Alignment",
+    "description": "If true, horizontally aligns arguments after an open bracket.",
+    "default": "Align"
+  },
+  "AlignEscapedNewlines": {
+    "type": "enum",
+    "values": ["DontAlign", "Left", "Right"],
+    "category": "Alignment",
+    "description": "Options for aligning backslashes in escaped newlines.",
+    "default": "Right"
+  },
+  "AlignOperands": {
+    "type": "enum",
+    "values": ["DontAlign", "Align", "AlignAfterOperator"],
+    "category": "Alignment",
+    "description": "If true, horizontally align operands of binary and ternary expressions.",
+    "default": "Align"
+  },
+  "AlignTrailingComments": {
+    "type": "bool",
+    "category": "Alignment",
+    "description": "If true, aligns trailing comments.",
+    "default": true
+  },
+  "BinPackArguments": {
+    "type": "bool",
+    "category": "Line Breaking",
+    "description": "If false, a function call's arguments will either all be on the same line or will each have their own line.",
+    "default": true,
+    "essential": true
+  },
+  "BinPackParameters": {
+    "type": "bool",
+    "category": "Line Breaking",
+    "description": "If false, a function declaration's parameters will either all be on the same line or will each have their own line.",
+    "default": true,
+    "essential": true
+  },
+  "BreakBeforeBinaryOperators": {
+    "type": "enum",
+    "values": ["None", "NonAssignment", "All"],
+    "category": "Line Breaking",
+    "description": "The way to wrap binary operators.",
+    "default": "None"
+  },
+  "BreakBeforeTernaryOperators": {
+    "type": "bool",
+    "category": "Line Breaking",
+    "description": "If true, ternary operators will be placed after line breaks.",
+    "default": true
+  },
+  "BreakConstructorInitializers": {
+    "type": "enum",
+    "values": ["BeforeColon", "BeforeComma", "AfterColon"],
+    "category": "Line Breaking",
+    "description": "The break constructor initializers style to use.",
+    "default": "BeforeColon",
+    "essential": true
+  },
+  "BreakInheritanceList": {
+    "type": "enum",
+    "values": ["BeforeColon", "BeforeComma", "AfterColon", "AfterComma"],
+    "category": "Line Breaking",
+    "description": "The inheritance list style to use.",
+    "default": "BeforeColon"
+  },
+  "BreakStringLiterals": {
+    "type": "bool",
+    "category": "Line Breaking",
+    "description": "Allow breaking string literals when formatting.",
+    "default": true
+  },
+  "BreakTemplateDeclarations": {
+    "type": "enum",
+    "values": ["No", "MultiLine", "Yes"],
+    "category": "Templates",
+    "description": "The template declaration breaking style to use.",
+    "default": "MultiLine"
+  },
+  "AlwaysBreakTemplateDeclarations": {
+    "type": "enum",
+    "values": ["No", "MultiLine", "Yes"],
+    "category": "Templates",
+    "description": "The template declaration breaking style to use (deprecated, use BreakTemplateDeclarations).",
+    "default": "MultiLine"
+  },
+  "IncludeBlocks": {
+    "type": "enum",
+    "values": ["Preserve", "Merge", "Regroup"],
+    "category": "Includes",
+    "description": "Dependent on the value, multiple #include blocks can be sorted as one and divided based on category.",
+    "default": "Preserve",
+    "essential": true
+  },
+  "SortIncludes": {
+    "type": "enum",
+    "values": ["Never", "CaseSensitive", "CaseInsensitive"],
+    "category": "Includes",
+    "description": "Controls if and how clang-format will sort #includes.",
+    "default": "CaseSensitive",
+    "essential": true
+  },
+  "SortUsingDeclarations": {
+    "type": "enum",
+    "values": ["Never", "Lexicographic", "LexicographicNumeric"],
+    "category": "Includes",
+    "description": "Controls if and how clang-format will sort using declarations.",
+    "default": "LexicographicNumeric"
+  },
+  "MaxEmptyLinesToKeep": {
+    "type": "int",
+    "category": "Whitespace",
+    "description": "The maximum number of consecutive empty lines to keep.",
+    "default": 1,
+    "min": 0,
+    "max": 10,
+    "essential": true
+  },
+  "EmptyLineBeforeAccessModifier": {
+    "type": "enum",
+    "values": ["Never", "Leave", "LogicalBlock", "Always"],
+    "category": "Whitespace",
+    "description": "Defines in which cases to put empty line before access modifiers.",
+    "default": "LogicalBlock"
+  },
+  "EmptyLineAfterAccessModifier": {
+    "type": "enum",
+    "values": ["Never", "Leave", "Always"],
+    "category": "Whitespace",
+    "description": "Defines in which cases to put empty line after access modifiers.",
+    "default": "Never"
+  },
+  "KeepEmptyLinesAtTheStartOfBlocks": {
+    "type": "bool",
+    "category": "Whitespace",
+    "description": "If true, the empty line at the start of blocks is kept.",
+    "default": true
+  },
+  "SeparateDefinitionBlocks": {
+    "type": "enum",
+    "values": ["Leave", "Always", "Never"],
+    "category": "Whitespace",
+    "description": "Specifies the use of empty lines to separate definition blocks, including classes, structs, enums, and functions.",
+    "default": "Leave"
+  },
+  "CommentPragmas": {
+    "type": "string",
+    "category": "Comments",
+    "description": "A regular expression that describes comments with special meaning, which should not be split across lines or otherwise changed.",
+    "default": "^ IWYU pragma:",
+    "essential": true
+  },
+  "ReflowComments": {
+    "type": "bool",
+    "category": "Comments",
+    "description": "If true, clang-format will attempt to re-flow comments.",
+    "default": true
+  },
+  "FixNamespaceComments": {
+    "type": "bool",
+    "category": "Comments",
+    "description": "If true, clang-format adds missing namespace end comments for short namespaces and fixes invalid existing ones.",
+    "default": true
+  },
+  "ShortNamespaceLines": {
+    "type": "int",
+    "category": "Comments",
+    "description": "The maximal number of unwrapped lines that a short namespace spans. Applies to FixNamespaceComments.",
+    "default": 1,
+    "min": 0,
+    "max": 20
+  },
+  "MacroBlockBegin": {
+    "type": "string",
+    "category": "Macros",
+    "description": "A regular expression matching macros that start a block.",
+    "default": ""
+  },
+  "MacroBlockEnd": {
+    "type": "string",
+    "category": "Macros",
+    "description": "A regular expression matching macros that end a block.",
+    "default": ""
+  },
+  "ForEachMacros": {
+    "type": "string",
+    "category": "Macros",
+    "description": "A vector of macros that should be interpreted as foreach loops instead of as function calls (semicolon-separated).",
+    "default": "foreach;Q_FOREACH;BOOST_FOREACH"
+  },
+  "StatementMacros": {
+    "type": "string",
+    "category": "Macros",
+    "description": "A vector of macros that should be interpreted as complete statements (semicolon-separated).",
+    "default": "Q_UNUSED;QT_REQUIRE_VERSION"
+  },
+  "WhitespaceSensitiveMacros": {
+    "type": "string",
+    "category": "Macros",
+    "description": "A vector of macros which are whitespace-sensitive and should not be touched (semicolon-separated).",
+    "default": "STRINGIZE;PP_STRINGIZE;BOOST_PP_STRINGIZE;NS_SWIFT_NAME;CF_SWIFT_NAME"
+  },
+  "RequiresClausePosition": {
+    "type": "enum",
+    "values": ["OwnLine", "WithPreceding", "WithFollowing", "SingleLine"],
+    "category": "Templates",
+    "description": "The position of the requires clause.",
+    "default": "OwnLine"
+  },
+  "RequiresExpressionIndentation": {
+    "type": "enum",
+    "values": ["OuterScope", "Keyword"],
+    "category": "Templates",
+    "description": "The indentation used for requires expression bodies.",
+    "default": "OuterScope"
+  },
+  "AccessModifierOffset": {
+    "type": "int",
+    "category": "Indentation",
+    "description": "The extra indent or outdent of access modifiers, e.g. public:.",
+    "default": -2,
+    "min": -8,
+    "max": 8
+  },
+  "ConstructorInitializerIndentWidth": {
+    "type": "int",
+    "category": "Indentation",
+    "description": "The number of characters to use for indentation of constructor initializer lists as well as inheritance lists.",
+    "default": 4,
+    "min": 0,
+    "max": 16
+  },
+  "PackConstructorInitializers": {
+    "type": "enum",
+    "values": ["Never", "BinPack", "CurrentLine", "NextLine", "NextLineOnly"],
+    "category": "Line Breaking",
+    "description": "The pack constructor initializers style to use.",
+    "default": "BinPack",
+    "essential": true
+  },
+  "PenaltyBreakAssignment": {
+    "type": "int",
+    "category": "Penalties",
+    "description": "The penalty for breaking around an assignment operator.",
+    "default": 2,
+    "min": 0,
+    "max": 1000
+  },
+  "PenaltyBreakBeforeFirstCallParameter": {
+    "type": "int",
+    "category": "Penalties",
+    "description": "The penalty for breaking a function call after call's opening parenthesis.",
+    "default": 19,
+    "min": 0,
+    "max": 1000
+  },
+  "PenaltyBreakComment": {
+    "type": "int",
+    "category": "Penalties",
+    "description": "The penalty for each line break introduced inside a comment.",
+    "default": 300,
+    "min": 0,
+    "max": 10000
+  },
+  "PenaltyBreakFirstLessLess": {
+    "type": "int",
+    "category": "Penalties",
+    "description": "The penalty for breaking before the first <<.",
+    "default": 120,
+    "min": 0,
+    "max": 10000
+  },
+  "PenaltyBreakString": {
+    "type": "int",
+    "category": "Penalties",
+    "description": "The penalty for each line break introduced inside a string literal.",
+    "default": 1000,
+    "min": 0,
+    "max": 100000
+  },
+  "PenaltyExcessCharacter": {
+    "type": "int",
+    "category": "Penalties",
+    "description": "The penalty for each character outside of the column limit.",
+    "default": 1000000,
+    "min": 0,
+    "max": 10000000
+  },
+  "PenaltyReturnTypeOnItsOwnLine": {
+    "type": "int",
+    "category": "Penalties",
+    "description": "Penalty for putting the return type of a function onto its own line.",
+    "default": 60,
+    "min": 0,
+    "max": 10000
+  }
+}
